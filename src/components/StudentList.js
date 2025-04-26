@@ -9,7 +9,7 @@ const StudentList = () => {
 
   const fetchStudents = async () => {
     try {
-      const res = await api.get('/students');
+      const res = await api.get('/api/students'); // ✅ Corrected path to match AddStudent
       setStudents(res.data);
     } catch (error) {
       console.error("Failed to fetch students", error);
@@ -18,7 +18,7 @@ const StudentList = () => {
 
   const deleteStudent = async (id) => {
     try {
-      await api.delete(`/students/${id}`);
+      await api.delete(`/api/students/${id}`); // ✅ Corrected path
       fetchStudents();
     } catch (error) {
       console.error("Failed to delete student", error);
@@ -30,12 +30,11 @@ const StudentList = () => {
   }, []);
 
   return (
-    <div className="student-list-container">
+    <div className="student-list-container" key={students.length}>
       <h2>Student List</h2>
 
       <div className="student-list-buttons">
-        <Link to="/add"><button>Add New Student</button></Link>
-        
+        <Link to="/add" state={{ refreshStudents: fetchStudents }}><button>Add New Student</button></Link>
       </div>
 
       <table>
@@ -62,11 +61,10 @@ const StudentList = () => {
               <td>{s.enrollmentYear}</td>
               <td>{s.isActive ? 'Active' : 'Inactive'}</td>
               <td>
-  <button  className="edit" onClick={() => navigate(`/edit/${s._id}`)}>Edit</button>{' '}
-  |{' '}
-  <button className="delete"onClick={() => deleteStudent(s._id)}>Delete</button>
-</td>
-
+                <button className="edit" onClick={() => navigate(`/edit/${s._id}`)}>Edit</button>{' '}
+                |{' '}
+                <button className="delete"onClick={() => deleteStudent(s._id)}>Delete</button>
+              </td>
             </tr>
           ))}
         </tbody>
